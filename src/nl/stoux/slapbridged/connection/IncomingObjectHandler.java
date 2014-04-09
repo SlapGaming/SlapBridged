@@ -178,7 +178,7 @@ public class IncomingObjectHandler extends BukkitRunnable {
 			
 			//Get the player & Add it to the server map
 			otherPlayer = newPlayer.getPlayer();
-			otherServer.getPlayers().put(otherPlayer.getPlayername(), otherPlayer);
+			otherServer.playerJoins(otherPlayer);
 			
 			//=> Bukkit events
 			event = new BridgedPlayerJoinEvent(otherServer, time, otherPlayer);
@@ -191,6 +191,8 @@ public class IncomingObjectHandler extends BukkitRunnable {
 			if ((otherServer = getServer(quitingPlayer.getServer())) == null) return; //Get the server => If null return
 			otherPlayer = getPlayer(otherServer, quitingPlayer.getPlayer()); //Get the player
 			otherPlayer.setOnline(false);
+			
+			otherServer.playerQuits(otherPlayer.getPlayername());
 			
 			//=> Bukkit events
 			event = new BridgedPlayerQuitEvent(otherServer, time, otherPlayer);

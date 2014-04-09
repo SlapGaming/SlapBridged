@@ -101,6 +101,10 @@ public class SlapBridged extends JavaPlugin {
 		if (reportRTS != null && reportRTS.isEnabled()) {
 			pm.registerEvents(new ModreqListener(), this);
 		}
+		
+		//	=> ServerListPing
+		//Disabled due to 1.6 <=> 1.7 Problems
+		//pm.registerEvents(new PingListener(config.getInt("maxplayers"), config.getStringList("messages")), this);
 	}
 	
 	@Override

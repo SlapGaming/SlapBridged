@@ -93,7 +93,7 @@ public class IncomingObjectHandler extends BukkitRunnable {
 			
 			//Shutdown the grid
 			bridge.setConnected(false);
-			bridge.shutdown();
+			bridge.shutdown(true);
 			break;
 		
 		//Server events

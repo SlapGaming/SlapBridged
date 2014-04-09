@@ -60,7 +60,7 @@ public class Bridge extends BukkitRunnable {
 			//Create socket & keep alive
 			try {
 				socket = new Socket(ip, port);
-			} catch (IOException e) {
+			} catch (IOException e) { //=> 
 				Bukkit.getScheduler().runTaskLaterAsynchronously(
 					SlapBridged.getInstance(),
 					new BukkitRunnable() {
@@ -69,8 +69,9 @@ public class Bridge extends BukkitRunnable {
 							SlapBridged.getInstance().getBridge().connect(); //Try to connect again in a minute
 						}
 					}, 
-					3600
+					1200
 				);
+				return;
 			}
 			socket.setKeepAlive(true);
 			
@@ -131,11 +132,11 @@ public class Bridge extends BukkitRunnable {
 		if (SlapBridged.getInstance().isEnabled()) {
 			AbstractEvent event = new ServerQuitGridEvent(getThisServer(), System.currentTimeMillis()); //Create event
 			BukkitUtil.runSync(new EventLauncher(event)); //Launch event
-			BukkitUtil.broadcast("We've disconnected the Grid!", true); //Message
+			BukkitUtil.broadcast("We've disconnected from the Grid!", true); //Message
 		}
 		
 		//Shutdown bridge
-		shutdown();
+		shutdown(false);
 	}
 
 	@Override
@@ -224,7 +225,7 @@ public class Bridge extends BukkitRunnable {
 	/**
 	 * Shutdown bridge
 	 */
-	public void shutdown() {
+	public void shutdown(boolean reconnect) {
 		//clear map
 		callbackMap.clear();
 		
@@ -260,6 +261,19 @@ public class Bridge extends BukkitRunnable {
 			socket.close();
 		} catch (IOException e) {}
 		
+		if (reconnect) { //Try to reconnect after a minute
+			System.out.println("Will try to reconnect!");
+			Bukkit.getScheduler().runTaskLaterAsynchronously(
+					SlapBridged.getInstance(),
+					new BukkitRunnable() {
+						@Override
+						public void run() {
+							SlapBridged.getInstance().getBridge().connect(); //Try to connect again in a minute
+						}
+					}, 
+					1200
+				);
+		}
 	}
 	
 

@@ -64,7 +64,7 @@ public class IncomingConnection extends BukkitRunnable {
 		} catch (ClassNotFoundException e) {
 			BukkitUtil.logError("Did not find the class: " + e.getMessage(), true);
 		} catch (IOException e) {
-			if (bridge.isConnected()) bridge.disconnect();
+			if (bridge.isConnected()) bridge.shutdown(true);
 		}
 	}
 	

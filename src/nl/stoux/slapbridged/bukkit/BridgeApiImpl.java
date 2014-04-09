@@ -118,4 +118,9 @@ public class BridgeApiImpl implements BridgeAPI {
 		return new ArrayList<OtherServer>(bridge.getOtherServersMap().values());
 	}
 
+	@Override
+	public boolean isConnected() {
+		return bridge.isConnected();
+	}
+	
 }

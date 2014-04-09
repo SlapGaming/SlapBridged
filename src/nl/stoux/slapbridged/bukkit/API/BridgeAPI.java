@@ -49,5 +49,10 @@ public interface BridgeAPI {
 	 */
 	public List<OtherServer> getOtherServers();
 	
-
+	/**
+	 * Check if the Bridge is connected to the Grid
+	 * @return is connected
+	 */
+	public boolean isConnected();
+	
 }

@@ -68,7 +68,7 @@ public class OutgoingConnection extends BukkitRunnable {
 						objectSender.flush(); //Flush to server
 					}
 				} catch (IOException e) {
-					if (bridge.isConnected()) bridge.shutdown();
+					if (bridge.isConnected()) bridge.shutdown(true);
 				}
 			}
 			

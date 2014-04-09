@@ -1,0 +1,12 @@
+name: SlapBridged
+main: nl.stoux.slapbridged.bukkit.SlapBridged
+depend: [PermissionsEx]
+softdepend: [ReportRTS]
+authors: [Stoux2]
+version: 0.1.0
+description: A plugin that links Sounds Like A Plan servers
+commands:
+  slapbridged:
+    description: The main SlapBridged command
+    usage: "Usage: /SlapBridged"
+    aliases: [slapbridge]

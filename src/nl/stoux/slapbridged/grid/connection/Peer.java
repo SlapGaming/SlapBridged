@@ -5,6 +5,7 @@ import java.net.Socket;
 
 import nl.stoux.slapbridged.IdentifierGenerator;
 import nl.stoux.slapbridged.grid.Grid;
+import nl.stoux.slapbridged.grid.service.PingService;
 import nl.stoux.slapbridged.objects.ObjectType;
 import nl.stoux.slapbridged.objects.OtherServer;
 import nl.stoux.slapbridged.objects.SendableContainer;
@@ -163,6 +164,8 @@ public class Peer implements Runnable {
 			
 			//Remove from map
 			grid.getServers().remove(thisServer.getName());
+			PingService.removeServer(thisServer.getName());
+			
 			System.out.println("Stopping peer: " + thisServer.getName()); //Output
 			
 			//Dismiss it if not done yet

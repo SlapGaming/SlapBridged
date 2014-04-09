@@ -89,7 +89,20 @@ public class PingService implements Runnable {
 		if (instance == null) return; //Shouldn't be possible, as this service is sending the pings
 		instance.serverToPing.remove(server);
 		instance.idToPing.remove(ID);
-	}	
+	}
+	
+	/**
+	 * Remove any Ping requests the server still has
+	 * @param server the servername
+	 */
+	public static void removeServer(String server) {
+		if (instance == null) return;
+		if (instance.serverToPing.containsKey(server)) { //Check if still a ping left
+			Ping ping = instance.serverToPing.get(server);
+			instance.serverToPing.remove(server);
+			instance.idToPing.remove(ping.getCallbackID());
+		}
+	}
 	
 	private class PingDisconnecter implements Runnable {
 		

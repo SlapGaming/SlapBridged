@@ -94,6 +94,7 @@ public class PingService implements Runnable {
 	private class PingDisconnecter implements Runnable {
 		
 		private Peer peer;
+		
 		public PingDisconnecter(Peer peer) {
 			this.peer = peer;
 		}

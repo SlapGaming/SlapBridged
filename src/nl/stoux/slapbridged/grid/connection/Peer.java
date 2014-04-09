@@ -3,7 +3,9 @@ package nl.stoux.slapbridged.grid.connection;
 import java.io.IOException;
 import java.net.Socket;
 
+import nl.stoux.slapbridged.IdentifierGenerator;
 import nl.stoux.slapbridged.grid.Grid;
+import nl.stoux.slapbridged.objects.ObjectType;
 import nl.stoux.slapbridged.objects.OtherServer;
 import nl.stoux.slapbridged.objects.SendableContainer;
 
@@ -16,6 +18,7 @@ public class Peer implements Runnable {
 	
 	//Connected
 	private boolean connected;
+	private boolean dismissed;
 	
 	//Connections
 	private Thread incomingThread;
@@ -30,6 +33,7 @@ public class Peer implements Runnable {
 		this.grid = grid;
 		this.socket = socket;
 		connected = false;
+		dismissed = false;
 	}
 
 	@Override
@@ -115,6 +119,23 @@ public class Peer implements Runnable {
 	}
 	
 	/**
+	 * See if this Peer has been dismissed
+	 * Meaning that the other servers have been told that this server has left
+	 * @return is dismissed
+	 */
+	public boolean isDismissed() {
+		return dismissed;
+	}
+	
+	/**
+	 * Set dismissed stats
+	 * @param dismissed
+	 */
+	public void setDismissed(boolean dismissed) {
+		this.dismissed = dismissed;
+	}
+	
+	/**
 	 * Get the grid
 	 * @return the grid
 	 */
@@ -128,15 +149,35 @@ public class Peer implements Runnable {
 	 * => Interrupts threads
 	 */
 	public void stopPeer(SendableContainer... containers) {
-		Thread.dumpStack();
-		if (thisServer != null) {
-			grid.getServers().remove(thisServer.getName());
-			System.out.println("Stopping peer: " + thisServer.getName());
-		}
+		//Set connected status
+		setConnected(false);
 		
 		//Disable the running status
 		incoming.setRunning(false);
 		outgoing.setRunning(false);
+		
+		//If fully connected
+		if (thisServer != null) {
+			//Connected status
+			thisServer.setConnected(false);
+			
+			//Remove from map
+			grid.getServers().remove(thisServer.getName());
+			System.out.println("Stopping peer: " + thisServer.getName()); //Output
+			
+			//Dismiss it if not done yet
+			if (!isDismissed()) {
+				setDismissed(true);
+				
+				//Create & Send disconnect container
+				SendableContainer disconnectContainer = new SendableContainer(
+					ObjectType.SERVER_DISCONNECT,
+					getThisServer().getName(),
+					IdentifierGenerator.nextID()
+				);
+				grid.sendToGrid(disconnectContainer, getThisServer().getName());
+			}
+		}
 		
 		//Stop threads
 		incomingThread.interrupt();

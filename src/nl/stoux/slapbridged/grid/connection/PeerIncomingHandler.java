@@ -45,6 +45,7 @@ public class PeerIncomingHandler implements Runnable {
 			
 			//Set server in peer
 			peer.setThisServer(server);
+			peer.setConnected(true);
 			
 			//Get servers to put in the grid
 			HashSet<OtherServer> servers = new HashSet<OtherServer>();
@@ -81,6 +82,9 @@ public class PeerIncomingHandler implements Runnable {
 			
 			//Remove from grid
 			grid.getServers().remove(peer.getThisServer().getName());
+			
+			//Set status
+			peer.setDismissed(true);
 			
 			//Create & Send disconnect container
 			SendableContainer disconnectContainer = new SendableContainer(

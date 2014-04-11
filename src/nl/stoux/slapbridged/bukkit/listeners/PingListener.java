@@ -1,4 +1,4 @@
-package nl.stoux.slapbridged.bukkit.serverlist;
+package nl.stoux.slapbridged.bukkit.listeners;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;

@@ -3,10 +3,14 @@ package nl.stoux.slapbridged.bukkit.events;
 import nl.stoux.slapbridged.objects.OtherPlayer;
 import nl.stoux.slapbridged.objects.OtherServer;
 
-public class NewModreqEvent extends AbstractEvent {
+public class ModreqEvent extends AbstractEvent {
 
 	private OtherPlayer player;
 	private String request;
+	
+	private ModreqType type;
+	
+	private String byMod;
 	
 	/**
 	 * Creates a new NewModreq event
@@ -15,10 +19,19 @@ public class NewModreqEvent extends AbstractEvent {
 	 * @param player The player
 	 * @param request The request
 	 */
-	public NewModreqEvent(OtherServer server, long eventTime, OtherPlayer player, String request) {
+	public ModreqEvent(OtherServer server, long eventTime, ModreqType type, OtherPlayer player, String request) {
 		super(server, eventTime);
 		this.player = player;
 		this.request = request;
+		this.type = type;
+	}
+	
+	public ModreqEvent(OtherServer server, long eventTime, ModreqType type, OtherPlayer player, String request, String byMod) {
+		super(server, eventTime);
+		this.player = player;
+		this.request = request;
+		this.type = type;
+		this.byMod = byMod;
 	}
 	
 	/**
@@ -36,6 +49,25 @@ public class NewModreqEvent extends AbstractEvent {
 	public String getRequest() {
 		return request;
 	}
+	
+	/**
+	 * Get the type
+	 * @return the type
+	 */
+	public ModreqType getType() {
+		return type;
+	}
+	
+	/**
+	 * Get the mod who finished/claimed the modreq
+	 * @return the mod's name
+	 */
+	public String getByMod() {
+		return byMod;
+	}
 
+	public enum ModreqType {
+		NEW, CLAIM, DONE
+	}
 	
 }

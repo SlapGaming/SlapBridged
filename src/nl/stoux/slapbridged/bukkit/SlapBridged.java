@@ -4,8 +4,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import nl.stoux.slapbridged.IdentifierGenerator;
 import nl.stoux.slapbridged.bukkit.API.BridgeAPI;
-import nl.stoux.slapbridged.bukkit.API.listeners.ModreqListener;
-import nl.stoux.slapbridged.bukkit.API.listeners.PlayerListener;
+import nl.stoux.slapbridged.bukkit.listeners.ModreqListener;
+import nl.stoux.slapbridged.bukkit.listeners.PlayerListener;
 import nl.stoux.slapbridged.connection.Bridge;
 import nl.stoux.slapbridged.objects.OtherPlayer;
 import nl.stoux.slapbridged.objects.OtherServer;

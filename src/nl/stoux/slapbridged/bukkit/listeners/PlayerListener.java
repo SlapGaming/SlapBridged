@@ -1,4 +1,4 @@
-package nl.stoux.slapbridged.bukkit.API.listeners;
+package nl.stoux.slapbridged.bukkit.listeners;
 
 import nl.stoux.slapbridged.IdentifierGenerator;
 import nl.stoux.slapbridged.bukkit.SlapBridged;

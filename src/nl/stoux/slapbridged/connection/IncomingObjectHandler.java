@@ -11,13 +11,16 @@ import nl.stoux.slapbridged.bukkit.events.BridgedPlayerAfkEvent;
 import nl.stoux.slapbridged.bukkit.events.BridgedPlayerAfkLeaveEvent;
 import nl.stoux.slapbridged.bukkit.events.BridgedPlayerChatEvent;
 import nl.stoux.slapbridged.bukkit.events.BridgedPlayerJoinEvent;
+import nl.stoux.slapbridged.bukkit.events.BridgedPlayerMeEvent;
 import nl.stoux.slapbridged.bukkit.events.BridgedPlayerQuitEvent;
+import nl.stoux.slapbridged.bukkit.events.BridgedPlayerWaveEvent;
 import nl.stoux.slapbridged.bukkit.events.BridgedServerConnectsEvent;
 import nl.stoux.slapbridged.bukkit.events.BridgedServerDisconnectsEvent;
 import nl.stoux.slapbridged.bukkit.events.ChatChannelEvent;
-import nl.stoux.slapbridged.bukkit.events.NewModreqEvent;
+import nl.stoux.slapbridged.bukkit.events.ModreqEvent;
 import nl.stoux.slapbridged.bukkit.events.ServerJoinGridEvent;
 import nl.stoux.slapbridged.bukkit.events.ServerQuitGridEvent;
+import nl.stoux.slapbridged.bukkit.events.ModreqEvent.ModreqType;
 import nl.stoux.slapbridged.objects.ObjectType;
 import nl.stoux.slapbridged.objects.OtherPlayer;
 import nl.stoux.slapbridged.objects.OtherServer;
@@ -29,6 +32,7 @@ import nl.stoux.slapbridged.objects.sendables.ExistingPlayer;
 import nl.stoux.slapbridged.objects.sendables.KnownPlayerRequest;
 import nl.stoux.slapbridged.objects.sendables.Modreq;
 import nl.stoux.slapbridged.objects.sendables.NewPlayer;
+import nl.stoux.slapbridged.objects.sendables.Wave;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -61,6 +65,8 @@ public class IncomingObjectHandler extends BukkitRunnable {
 		AbstractEvent event; //Empty event
 		OtherServer otherServer;
 		OtherPlayer otherPlayer;
+		
+		Modreq modreq;
 		
 		AfkReason afkReason;
 		
@@ -123,6 +129,16 @@ public class IncomingObjectHandler extends BukkitRunnable {
 			BukkitUtil.broadcast("The dimension " + translateColors(disconnectedServer.getChatPrefix()) + ChatColor.WHITE + " has disconnected & left the grid.", true); //message			
 			break;
 			
+		case GRID_BROADCAST: //=> A grid wide broadcast
+			String serverBroadcast = (String) container.getObject(); //Get broadcast
+			
+			//=> Bukkit broadcast
+			BukkitUtil.broadcast(
+				"[" + ChatColor.RED + "Server-Broadcast" + ChatColor.WHITE + "] " + ChatColor.GREEN + ChatColor.translateAlternateColorCodes('&', serverBroadcast),
+				false
+			);
+			break;
+			
 		//player events
 		case PLAYER_AFK: //=> A bridged player goes AFK
 			afkReason = (AfkReason) container.getObject();
@@ -151,7 +167,36 @@ public class IncomingObjectHandler extends BukkitRunnable {
 			BukkitUtil.runSync(new EventLauncher(event)); //Launch event
 			BukkitUtil.broadcast(translateColors(otherServer.getChatPrefix()) + ChatColor.WHITE + " " + afkReason.getPlayer() + " is no longer AFK.", false);
 			break;
+				
+		case PLAYER_JOIN: //=> A bridged player joins
+			NewPlayer newPlayer = (NewPlayer) container.getObject();
+			if ((otherServer = getServer(newPlayer.getServer())) == null) return; //Get the server => If null return
 			
+			//Get the player & Add it to the server map
+			otherPlayer = newPlayer.getPlayer();
+			otherServer.playerJoins(otherPlayer);
+			
+			//=> Bukkit events
+			event = new BridgedPlayerJoinEvent(otherServer, time, otherPlayer);
+			BukkitUtil.runSync(new EventLauncher(event)); //Launch event
+			BukkitUtil.broadcast(ChatColor.YELLOW + otherPlayer.getPlayername() + " has joined the dimension " + otherServer.getName() + ".", false);
+			break;
+			
+		case PLAYER_QUIT:
+			ExistingPlayer quitingPlayer = (ExistingPlayer) container.getObject();
+			if ((otherServer = getServer(quitingPlayer.getServer())) == null) return; //Get the server => If null return
+			otherPlayer = getPlayer(otherServer, quitingPlayer.getPlayer()); //Get the player
+			otherPlayer.setOnline(false);
+			
+			otherServer.playerQuits(otherPlayer.getPlayername());
+			
+			//=> Bukkit events
+			event = new BridgedPlayerQuitEvent(otherServer, time, otherPlayer);
+			BukkitUtil.runSync(new EventLauncher(event)); //Launch event
+			BukkitUtil.broadcast(ChatColor.YELLOW + otherPlayer.getPlayername() + " has left the dimension " + otherServer.getName() + ".", false);
+			break;
+			
+		//Social
 		case PLAYER_CHAT: //=> A bridged player chats
 			Chat chat = (Chat) container.getObject();
 			if ((otherServer = getServer(chat.getServer())) == null) return; //Get the server => If null return
@@ -172,42 +217,67 @@ public class IncomingObjectHandler extends BukkitRunnable {
 			}
 			break;
 			
-		case PLAYER_JOIN: //=> A bridged player joins
-			NewPlayer newPlayer = (NewPlayer) container.getObject();
-			if ((otherServer = getServer(newPlayer.getServer())) == null) return; //Get the server => If null return
+		case PLAYER_ME: //=> A bridged player uses /me
+			Chat meCommand = (Chat) container.getObject(); //=> Disguise the chat as a /me. The message being the arguments after /me
+			if ((otherServer = getServer(meCommand.getServer())) == null) return; //Get the server => If null return
+			if ((otherPlayer = getPlayer(otherServer, meCommand.getPlayer())) == null) return; //Get the player => If null return
 			
-			//Get the player & Add it to the server map
-			otherPlayer = newPlayer.getPlayer();
-			otherServer.playerJoins(otherPlayer);
-			
-			//=> Bukkit events
-			event = new BridgedPlayerJoinEvent(otherServer, time, otherPlayer);
+			//=> Bukkit Events
+			event = new BridgedPlayerMeEvent(otherServer, time, otherPlayer, meCommand.getChatMessage());
 			BukkitUtil.runSync(new EventLauncher(event)); //Launch event
-			BukkitUtil.broadcast(ChatColor.YELLOW + otherPlayer.getPlayername() + " has joined the dimension " + otherServer.getName(), false);
 			break;
 			
-		case PLAYER_QUIT:
-			ExistingPlayer quitingPlayer = (ExistingPlayer) container.getObject();
-			if ((otherServer = getServer(quitingPlayer.getServer())) == null) return; //Get the server => If null return
-			otherPlayer = getPlayer(otherServer, quitingPlayer.getPlayer()); //Get the player
-			otherPlayer.setOnline(false);
+		case PLAYER_WAVE: //=> A bridged player waves to another bridged player
+			Wave wave = (Wave) container.getObject();
+			if ((otherServer = getServer(wave.getServer())) == null) return; //Get the server => If null return
+			if ((otherPlayer = getPlayer(otherServer, wave.getPlayer())) == null) return; //Get the player => If null return
 			
-			otherServer.playerQuits(otherPlayer.getPlayername());
+			//Check if waving to everyone
+			if (wave.isWavingToEveryone()) {
+				//=> Create Bukkit Event
+				event = new BridgedPlayerWaveEvent(otherServer, time, otherPlayer);
+			} else {
+				//Get the details for the Waved To
+				OtherServer wavedPlayerServer; OtherPlayer wavedPlayer;
+				if ((wavedPlayerServer = getServer(wave.getOtherServer())) == null) return;
+				if ((wavedPlayer = getPlayer(wavedPlayerServer, wave.getOtherPlayer())) == null) return; //Get the player => If null return
+				
+				//=> Create Bukkit Event
+				event = new BridgedPlayerWaveEvent(otherServer, time, otherPlayer, wavedPlayer);
+			}
 			
 			//=> Bukkit events
-			event = new BridgedPlayerQuitEvent(otherServer, time, otherPlayer);
 			BukkitUtil.runSync(new EventLauncher(event)); //Launch event
-			BukkitUtil.broadcast(ChatColor.YELLOW + otherPlayer.getPlayername() + " has left the dimension " + otherServer.getName(), false);
 			break;
 			
 		//Modreq event
 		case NEW_MODREQ:
-			Modreq modreq = (Modreq) container.getObject();
+			modreq = (Modreq) container.getObject();
 			if ((otherServer = getServer(modreq.getServer())) == null) return; //Get the server => If null return
 			if ((otherPlayer = getPlayer(otherServer, modreq.getPlayer())) == null) return; //Get the player => If null return
 			
 			//=> Bukkit events
-			event = new NewModreqEvent(otherServer, time, otherPlayer, modreq.getModreq());
+			event = new ModreqEvent(otherServer, time, ModreqType.NEW, otherPlayer, modreq.getModreq());
+			BukkitUtil.runSync(new EventLauncher(event)); //Launch event
+			break;
+			
+		case CLAIM_MODREQ:
+			modreq = (Modreq) container.getObject();
+			if ((otherServer = getServer(modreq.getServer())) == null) return; //Get the server => If null return
+			if ((otherPlayer = getPlayer(otherServer, modreq.getPlayer())) == null) return; //Get the player => If null return
+			
+			//=> Bukkit events
+			event = new ModreqEvent(otherServer, time, ModreqType.CLAIM, otherPlayer, modreq.getModreq(), modreq.getModname());
+			BukkitUtil.runSync(new EventLauncher(event)); //Launch event
+			break;
+			
+		case DONE_MODREQ:
+			modreq = (Modreq) container.getObject();
+			if ((otherServer = getServer(modreq.getServer())) == null) return; //Get the server => If null return
+			if ((otherPlayer = getPlayer(otherServer, modreq.getPlayer())) == null) return; //Get the player => If null return
+			
+			//=> Bukkit events
+			event = new ModreqEvent(otherServer, time, ModreqType.DONE, otherPlayer, modreq.getModreq(), modreq.getModname());
 			BukkitUtil.runSync(new EventLauncher(event)); //Launch event
 			break;
 			

@@ -6,7 +6,6 @@ public class Wave extends ExistingPlayer implements Serializable {
 
 	private static final long serialVersionUID = -7224559829950770724L;
 
-	private String otherServer;
 	private String otherPlayer;
 	
 	private boolean everyone;
@@ -15,12 +14,10 @@ public class Wave extends ExistingPlayer implements Serializable {
 	 * Wave to another player
 	 * @param server The waving player's server
 	 * @param player The waving player
-	 * @param otherServer The waved to player's server
 	 * @param otherPlayer The waved to player
 	 */
 	public Wave(String server, String player, String otherServer, String otherPlayer) {
 		super(server, player);
-		this.otherServer = otherServer;
 		this.otherPlayer = otherPlayer;
 		everyone = false;
 	}
@@ -49,14 +46,6 @@ public class Wave extends ExistingPlayer implements Serializable {
 	 */
 	public String getOtherPlayer() {
 		return otherPlayer;
-	}
-	
-	/**
-	 * Get the other player's server
-	 * @return the server
-	 */
-	public String getOtherServer() {
-		return otherServer;
 	}
 
 }

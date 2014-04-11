@@ -237,14 +237,9 @@ public class IncomingObjectHandler extends BukkitRunnable {
 			if (wave.isWavingToEveryone()) {
 				//=> Create Bukkit Event
 				event = new BridgedPlayerWaveEvent(otherServer, time, otherPlayer);
-			} else {
-				//Get the details for the Waved To
-				OtherServer wavedPlayerServer; OtherPlayer wavedPlayer;
-				if ((wavedPlayerServer = getServer(wave.getOtherServer())) == null) return;
-				if ((wavedPlayer = getPlayer(wavedPlayerServer, wave.getOtherPlayer())) == null) return; //Get the player => If null return
-				
+			} else {				
 				//=> Create Bukkit Event
-				event = new BridgedPlayerWaveEvent(otherServer, time, otherPlayer, wavedPlayer);
+				event = new BridgedPlayerWaveEvent(otherServer, time, otherPlayer, wave.getOtherPlayer());
 			}
 			
 			//=> Bukkit events

@@ -6,11 +6,11 @@ import nl.stoux.slapbridged.objects.OtherServer;
 public class BridgedPlayerWaveEvent extends AbstractEvent {
 
 	private OtherPlayer wavingPlayer;
-	private OtherPlayer wavedToPlayer;
+	private String wavedToPlayer;
 	
 	private boolean waveToEveryone;
 	
-	public BridgedPlayerWaveEvent(OtherServer server, long eventTime, OtherPlayer fromPlayer, OtherPlayer toPlayer) {
+	public BridgedPlayerWaveEvent(OtherServer server, long eventTime, OtherPlayer fromPlayer, String toPlayer) {
 		super(server, eventTime);
 		this.wavingPlayer = fromPlayer;
 		this.wavedToPlayer = toPlayer;
@@ -34,7 +34,7 @@ public class BridgedPlayerWaveEvent extends AbstractEvent {
 	 * Get the player who gets waved to
 	 * @return the player
 	 */
-	public OtherPlayer getWavedToPlayer() {
+	public String getWavedToPlayer() {
 		return wavedToPlayer;
 	}
 	

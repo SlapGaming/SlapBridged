@@ -37,8 +37,29 @@ public interface BridgeAPI {
 	 */
 	public void PlayerLeavesAFK(String player);
 	
+	
 	/**
-	 * Get the total number of players online, including this server
+	 * A player waves to another player
+	 * @param fromPlayer The name of the first player
+	 * @param toPlayer The name of the second player
+	 */
+	public void PlayerWavesToPlayer(String fromPlayer, String toPlayer);
+	
+	/**
+	 * A player waves to everyone
+	 * @param fromPlayer The sending player
+	 */
+	public void PlayerWavesToEveryone(String fromPlayer);
+	
+	/**
+	 * A player uses the /me command
+	 * @param player The player
+	 * @param message The message
+	 */
+	public void PlayerUsesMeCommand(String player, String message);
+	
+	/**
+	 * Get the total number of players online, excluding this server
 	 * @return the number of online players
 	 */
 	public int getTotalPlayersOnline();

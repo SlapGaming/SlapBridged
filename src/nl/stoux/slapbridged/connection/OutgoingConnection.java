@@ -88,7 +88,7 @@ public class OutgoingConnection extends BukkitRunnable {
 	 * Send an object to the grid
 	 * @param o The object
 	 */
-	public void send(Object o) {
+	public void send(SendableContainer o) {
 		synchronized (list) {
 			list.add(o);
 			synchronized(this) {

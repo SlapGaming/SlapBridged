@@ -12,8 +12,10 @@ import nl.stoux.slapbridged.objects.OtherPlayer;
 import nl.stoux.slapbridged.objects.OtherServer;
 import nl.stoux.slapbridged.objects.SendableContainer;
 import nl.stoux.slapbridged.objects.sendables.AfkReason;
+import nl.stoux.slapbridged.objects.sendables.Chat;
 import nl.stoux.slapbridged.objects.sendables.ChatChannelMessage;
 import nl.stoux.slapbridged.objects.sendables.KnownPlayerRequest;
+import nl.stoux.slapbridged.objects.sendables.Wave;
 
 public class BridgeApiImpl implements BridgeAPI {
 
@@ -121,6 +123,43 @@ public class BridgeApiImpl implements BridgeAPI {
 	@Override
 	public boolean isConnected() {
 		return bridge.isConnected();
+	}
+	
+	@Override
+	public void PlayerUsesMeCommand(String player, String message) {
+		if (!bridge.isConnected()) return; //Check if connected
+		
+		//Create & Send container
+		bridge.getOutgoing().send(new SendableContainer(
+			ObjectType.PLAYER_ME,
+			new Chat(bridge.getThisServer().getName(), player, message),
+			IdentifierGenerator.nextID()
+		));
+	}
+	
+	@Override
+	public void PlayerWavesToPlayer(String fromPlayer, String toPlayer) {
+		if (!bridge.isConnected()) return; //Check if connected
+		
+		//Create & Send container
+		//Create & Send Container
+		bridge.getOutgoing().send(new SendableContainer(
+			ObjectType.PLAYER_WAVE,
+			new Wave(bridge.getThisServer().getName(), fromPlayer),
+			IdentifierGenerator.nextID()
+		));
+	}
+	
+	@Override
+	public void PlayerWavesToEveryone(String fromPlayer) {
+		if (!bridge.isConnected()) return; //Check if connected
+		
+		//Create & Send Container
+		bridge.getOutgoing().send(new SendableContainer(
+			ObjectType.PLAYER_WAVE,
+			new Wave(bridge.getThisServer().getName(), fromPlayer),
+			IdentifierGenerator.nextID()
+		));
 	}
 	
 }

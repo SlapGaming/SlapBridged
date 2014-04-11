@@ -23,9 +23,11 @@ import ru.tehkode.permissions.bukkit.PermissionsEx;
 public class PlayerListener implements Listener {
 
 	private SlapBridged slapBridge;
+	private String colorPermission;
 	
-	public PlayerListener() {
+	public PlayerListener(String colorPermission) {
 		slapBridge = SlapBridged.getInstance();
+		this.colorPermission = colorPermission;
 	}
 	
 	@EventHandler(priority = EventPriority.MONITOR)
@@ -37,7 +39,8 @@ public class PlayerListener implements Listener {
 		OtherPlayer otherPlayer = new OtherPlayer(
 			event.getPlayer().getName(),
 			user.getGroups()[0].getRank(),
-			user.getPrefix()
+			user.getPrefix(),
+			user.has(colorPermission)
 		);
 		
 		//Add to server

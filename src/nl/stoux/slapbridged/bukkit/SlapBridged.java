@@ -66,6 +66,9 @@ public class SlapBridged extends JavaPlugin {
 		String tabname = config.getString("servertabname");
 		String chatPrefix = config.getString("serverchatprefix");
 		
+		//	=> Get color permission string
+		String colorPermission = config.getString("colorpermission");
+		
 		//	=> Create server object
 		OtherServer thisServer = new OtherServer(IP, port, name, tabname, chatPrefix, null);
 		
@@ -76,7 +79,8 @@ public class SlapBridged extends JavaPlugin {
 			OtherPlayer oPlayer = new OtherPlayer( //Create new player
 				p.getName(),
 				user.getGroups()[0].getRank(), 
-				user.getPrefix()
+				user.getPrefix(),
+				user.has(colorPermission)
 			);
 			playerMap.put(p.getName(), oPlayer); //Put in map
 		}
@@ -94,7 +98,7 @@ public class SlapBridged extends JavaPlugin {
 		
 		//Implements listeners
 		PluginManager pm = getServer().getPluginManager(); //Get PM
-		pm.registerEvents(new PlayerListener(), this); //Register general player events
+		pm.registerEvents(new PlayerListener(colorPermission), this); //Register general player events
 		
 		//	=> Check if ReportRTS is enabled
 		ReportRTS reportRTS = (ReportRTS) pm.getPlugin("ReportRTS");

@@ -211,7 +211,8 @@ public class IncomingObjectHandler extends BukkitRunnable {
 						otherServer.getChatPrefix()) + 
 						ChatColor.WHITE + "<" + 
 						translateColors(otherPlayer.getPrefix() + otherPlayer.getPlayername()) + 
-						ChatColor.WHITE + "> " + chat.getChatMessage(),
+						ChatColor.WHITE + "> " + 
+						(otherPlayer.hasColoredChat() ? ChatColor.translateAlternateColorCodes('&', chat.getChatMessage()) : chat.getChatMessage()), //Check if allowed to do colored chat
 					false
 				);
 			}

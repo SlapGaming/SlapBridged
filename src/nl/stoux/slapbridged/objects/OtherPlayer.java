@@ -10,31 +10,23 @@ public class OtherPlayer implements Serializable {
 	private int rank;
 	private String prefix;
 	
+	private boolean coloredChat;
+	
 	private boolean afk;
 	private String afkReason;
 	
 	private boolean online;
 	
-	public OtherPlayer(String playername, int rank, String prefix) {
+	public OtherPlayer(String playername, int rank, String prefix, boolean coloredChat) {
 		this.playername = playername;
 		this.rank = rank;
 		this.prefix = prefix;
+		this.coloredChat = coloredChat;
 		
 		online = true;
 		
 		afk = false;
 		afkReason = null;
-	}
-	
-	public OtherPlayer(String playername, int rank, String prefix, String afkReason) {
-		this.playername = playername;
-		this.rank = rank;
-		this.prefix = prefix;
-		
-		online = true;
-		
-		afk = true;
-		this.afkReason = afkReason;
 	}
 	
 	/**
@@ -111,11 +103,19 @@ public class OtherPlayer implements Serializable {
 	}
 	
 	/**
+	 * Check if the player is allowed to do colored chat messages
+	 * @return is allowed
+	 */
+	public boolean hasColoredChat() {
+		return coloredChat;
+	}
+	
+	/**
 	 * Copy this player
 	 * @return the copy
 	 */
 	public OtherPlayer copy(OtherServer copyServer) {
-		return new OtherPlayer(playername, rank, prefix);
+		return new OtherPlayer(playername, rank, prefix, coloredChat);
 	}
 
 }

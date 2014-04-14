@@ -12,6 +12,7 @@ import nl.stoux.slapbridged.bukkit.events.BridgedPlayerAfkLeaveEvent;
 import nl.stoux.slapbridged.bukkit.events.BridgedPlayerChatEvent;
 import nl.stoux.slapbridged.bukkit.events.BridgedPlayerJoinEvent;
 import nl.stoux.slapbridged.bukkit.events.BridgedPlayerMeEvent;
+import nl.stoux.slapbridged.bukkit.events.BridgedPlayerMentionEvent;
 import nl.stoux.slapbridged.bukkit.events.BridgedPlayerQuitEvent;
 import nl.stoux.slapbridged.bukkit.events.BridgedPlayerWaveEvent;
 import nl.stoux.slapbridged.bukkit.events.BridgedServerConnectsEvent;
@@ -246,6 +247,19 @@ public class IncomingObjectHandler extends BukkitRunnable {
 			BukkitUtil.runSync(new EventLauncher(event)); //Launch event
 			break;
 			
+		case PLAYER_MENTION:
+			Chat mention = (Chat) container.getObject();
+			
+			//Get server & player
+			if ((otherServer = getServer(mention.getServer())) == null) return; //Get the server => If null return
+			if ((otherPlayer = getPlayer(otherServer, mention.getPlayer())) == null) return; //Get the player => If null return
+			
+			//=> Bukkit events
+			event = new BridgedPlayerMentionEvent(otherServer, time, otherPlayer, mention.getChatMessage());
+			//	=> Call in A-Sync
+			BukkitUtil.callEvent(event);
+			break;
+			
 		//Modreq event
 		case NEW_MODREQ:
 			modreq = (Modreq) container.getObject();
@@ -253,7 +267,7 @@ public class IncomingObjectHandler extends BukkitRunnable {
 			if ((otherPlayer = getPlayer(otherServer, modreq.getPlayer())) == null) return; //Get the player => If null return
 			
 			//=> Bukkit events
-			event = new ModreqEvent(otherServer, time, ModreqType.NEW, otherPlayer, modreq.getModreq());
+			event = new ModreqEvent(otherServer, time, ModreqType.NEW, otherPlayer, modreq.getFollowID(), modreq.getModreq());
 			BukkitUtil.runSync(new EventLauncher(event)); //Launch event
 			break;
 			
@@ -263,7 +277,7 @@ public class IncomingObjectHandler extends BukkitRunnable {
 			if ((otherPlayer = getPlayer(otherServer, modreq.getPlayer())) == null) return; //Get the player => If null return
 			
 			//=> Bukkit events
-			event = new ModreqEvent(otherServer, time, ModreqType.CLAIM, otherPlayer, modreq.getModreq(), modreq.getModname());
+			event = new ModreqEvent(otherServer, time, ModreqType.CLAIM, otherPlayer, modreq.getFollowID(), modreq.getModreq(), modreq.getModname());
 			BukkitUtil.runSync(new EventLauncher(event)); //Launch event
 			break;
 			
@@ -273,7 +287,7 @@ public class IncomingObjectHandler extends BukkitRunnable {
 			if ((otherPlayer = getPlayer(otherServer, modreq.getPlayer())) == null) return; //Get the player => If null return
 			
 			//=> Bukkit events
-			event = new ModreqEvent(otherServer, time, ModreqType.DONE, otherPlayer, modreq.getModreq(), modreq.getModname());
+			event = new ModreqEvent(otherServer, time, ModreqType.DONE, otherPlayer, modreq.getFollowID(), modreq.getModreq(), modreq.getModname());
 			BukkitUtil.runSync(new EventLauncher(event)); //Launch event
 			break;
 			

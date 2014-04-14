@@ -26,7 +26,7 @@ public class BridgeApiImpl implements BridgeAPI {
 	}
 
 	@Override
-	public void ChatChannelMessage(String channel, String player, String message) {
+	public void chatChannelMessage(String channel, String player, String message) {
 		if (!bridge.isConnected()) return; //Ignore if not connected
 		
 		//Get server & create new sendable
@@ -42,7 +42,7 @@ public class BridgeApiImpl implements BridgeAPI {
 	}
 
 	@Override
-	public void IsPlayerKnown(String player, PlayerKnownCallback callback) {
+	public void isPlayerKnown(String player, PlayerKnownCallback callback) {
 		if (!bridge.isConnected()) return; //Ignore if not connected
 		
 		//Get server & create new sendable
@@ -61,7 +61,7 @@ public class BridgeApiImpl implements BridgeAPI {
 	}
 
 	@Override
-	public void PlayerGoesAFK(String player, String reason) {
+	public void playerGoesAFK(String player, String reason) {
 		//Get player => Set to AFK
 		OtherPlayer otherPlayer = bridge.getThisServer().getPlayers().get(player);
 		if (otherPlayer != null) {
@@ -82,7 +82,7 @@ public class BridgeApiImpl implements BridgeAPI {
 	}
 
 	@Override
-	public void PlayerLeavesAFK(String player) {
+	public void playerLeavesAFK(String player) {
 		//Get player => Leave AFK
 		OtherPlayer otherPlayer = bridge.getThisServer().getPlayers().get(player);
 		if (otherPlayer != null) {
@@ -126,7 +126,7 @@ public class BridgeApiImpl implements BridgeAPI {
 	}
 	
 	@Override
-	public void PlayerUsesMeCommand(String player, String message) {
+	public void playerUsesMeCommand(String player, String message) {
 		if (!bridge.isConnected()) return; //Check if connected
 		
 		//Create & Send container
@@ -138,7 +138,7 @@ public class BridgeApiImpl implements BridgeAPI {
 	}
 	
 	@Override
-	public void PlayerWavesToPlayer(String fromPlayer, String toPlayer) {
+	public void playerWavesToPlayer(String fromPlayer, String toPlayer) {
 		if (!bridge.isConnected()) return; //Check if connected
 		
 		//Create & Send container
@@ -151,13 +151,25 @@ public class BridgeApiImpl implements BridgeAPI {
 	}
 	
 	@Override
-	public void PlayerWavesToEveryone(String fromPlayer) {
+	public void playerWavesToEveryone(String fromPlayer) {
 		if (!bridge.isConnected()) return; //Check if connected
 		
 		//Create & Send Container
 		bridge.getOutgoing().send(new SendableContainer(
 			ObjectType.PLAYER_WAVE,
 			new Wave(bridge.getThisServer().getName(), fromPlayer),
+			IdentifierGenerator.nextID()
+		));
+	}
+
+	@Override
+	public void playerUsesMention(String player, String message) {
+		if (!bridge.isConnected()) return;
+		
+		//Create & Send container
+		bridge.getOutgoing().send(new SendableContainer(
+			ObjectType.PLAYER_MENTION,
+			new Chat(bridge.getThisServer().getName(), player, message),
 			IdentifierGenerator.nextID()
 		));
 	}

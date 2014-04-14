@@ -6,6 +6,7 @@ import nl.stoux.slapbridged.objects.OtherServer;
 public class ModreqEvent extends AbstractEvent {
 
 	private OtherPlayer player;
+	private int followID;
 	private String request;
 	
 	private ModreqType type;
@@ -19,19 +20,21 @@ public class ModreqEvent extends AbstractEvent {
 	 * @param player The player
 	 * @param request The request
 	 */
-	public ModreqEvent(OtherServer server, long eventTime, ModreqType type, OtherPlayer player, String request) {
+	public ModreqEvent(OtherServer server, long eventTime, ModreqType type, OtherPlayer player, int followID, String request) {
 		super(server, eventTime);
 		this.player = player;
 		this.request = request;
 		this.type = type;
+		this.followID = followID;
 	}
 	
-	public ModreqEvent(OtherServer server, long eventTime, ModreqType type, OtherPlayer player, String request, String byMod) {
+	public ModreqEvent(OtherServer server, long eventTime, ModreqType type, OtherPlayer player, int followID, String request, String byMod) {
 		super(server, eventTime);
 		this.player = player;
 		this.request = request;
 		this.type = type;
 		this.byMod = byMod;
+		this.followID = followID;
 	}
 	
 	/**
@@ -64,6 +67,14 @@ public class ModreqEvent extends AbstractEvent {
 	 */
 	public String getByMod() {
 		return byMod;
+	}
+	
+	/**
+	 * Get follow request ID
+	 * @return the ID
+	 */
+	public int getFollowID() {
+		return followID;
 	}
 
 	public enum ModreqType {

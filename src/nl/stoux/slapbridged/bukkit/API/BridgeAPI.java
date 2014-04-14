@@ -13,7 +13,7 @@ public interface BridgeAPI {
 	 * @param player The player who send the message
 	 * @param message The message
 	 */
-	public void ChatChannelMessage(String channel, String player, String message);
+	public void chatChannelMessage(String channel, String player, String message);
 	
 	
 	/**
@@ -21,21 +21,21 @@ public interface BridgeAPI {
 	 * @param player The player
 	 * @param callback The callback with the results of your request.
 	 */
-	public void IsPlayerKnown(String player, PlayerKnownCallback callback);
+	public void isPlayerKnown(String player, PlayerKnownCallback callback);
 	
 	/**
 	 * A player goes AFK
 	 * @param player the player
 	 * @param reason the reason
 	 */
-	public void PlayerGoesAFK(String player, String reason);
+	public void playerGoesAFK(String player, String reason);
 	
 	
 	/**
 	 * A player leaves AFK
 	 * @param player the player
 	 */
-	public void PlayerLeavesAFK(String player);
+	public void playerLeavesAFK(String player);
 	
 	
 	/**
@@ -43,20 +43,27 @@ public interface BridgeAPI {
 	 * @param fromPlayer The name of the first player
 	 * @param toPlayer The name of the second player
 	 */
-	public void PlayerWavesToPlayer(String fromPlayer, String toPlayer);
+	public void playerWavesToPlayer(String fromPlayer, String toPlayer);
 	
 	/**
 	 * A player waves to everyone
 	 * @param fromPlayer The sending player
 	 */
-	public void PlayerWavesToEveryone(String fromPlayer);
+	public void playerWavesToEveryone(String fromPlayer);
 	
 	/**
 	 * A player uses the /me command
 	 * @param player The player
 	 * @param message The message
 	 */
-	public void PlayerUsesMeCommand(String player, String message);
+	public void playerUsesMeCommand(String player, String message);
+	
+	/**
+	 * A player @ Mentions another player
+	 * @param player The player mentioning
+	 * @param message The message
+	 */
+	public void playerUsesMention(String player, String message);
 	
 	/**
 	 * Get the total number of players online, excluding this server

@@ -3,6 +3,7 @@ package nl.stoux.slapbridged.bukkit.API;
 import java.util.List;
 
 import nl.stoux.slapbridged.bukkit.API.callbacks.PlayerKnownCallback;
+import nl.stoux.slapbridged.connection.Bridge;
 import nl.stoux.slapbridged.objects.OtherServer;
 
 public interface BridgeAPI {
@@ -82,5 +83,12 @@ public interface BridgeAPI {
 	 * @return is connected
 	 */
 	public boolean isConnected();
+	
+	/**
+	 * Get the Bridge.
+	 * Warning: This class can easily change.
+	 * @return the bridge
+	 */
+	public Bridge getBridge();
 	
 }

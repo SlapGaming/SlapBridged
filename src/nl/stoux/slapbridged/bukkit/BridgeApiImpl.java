@@ -173,5 +173,10 @@ public class BridgeApiImpl implements BridgeAPI {
 			IdentifierGenerator.nextID()
 		));
 	}
+
+	@Override
+	public Bridge getBridge() {
+		return bridge;
+	}
 	
 }

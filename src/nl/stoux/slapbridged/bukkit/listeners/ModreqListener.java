@@ -12,6 +12,7 @@ import org.bukkit.event.Listener;
 
 import com.nyancraft.reportrts.data.HelpRequest;
 import com.nyancraft.reportrts.event.ReportClaimEvent;
+import com.nyancraft.reportrts.event.ReportCompleteEvent;
 import com.nyancraft.reportrts.event.ReportCreateEvent;
 
 public class ModreqListener implements Listener {
@@ -56,7 +57,7 @@ public class ModreqListener implements Listener {
 	}
 	
 	@EventHandler
-	public void onFinishModreq(ReportClaimEvent event) {
+	public void onFinishModreq(ReportCompleteEvent event) {
 		Bridge bridge = slapBridge.getBridge();
 		if (!bridge.isConnected()) return;
 		

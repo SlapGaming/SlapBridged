@@ -12,13 +12,14 @@ public class BridgedPlayerWaveEvent extends AbstractEvent {
 	
 	public BridgedPlayerWaveEvent(OtherServer server, long eventTime, OtherPlayer fromPlayer, String toPlayer) {
 		super(server, eventTime);
-		this.wavingPlayer = fromPlayer;
-		this.wavedToPlayer = toPlayer;
+		wavingPlayer = fromPlayer;
+		wavedToPlayer = toPlayer;
 		waveToEveryone = false;
 	}
 	
 	public BridgedPlayerWaveEvent(OtherServer server, long eventTime, OtherPlayer fromPlayer) {
 		super(server, eventTime);
+		wavingPlayer = fromPlayer;
 		waveToEveryone = true;
 	}
 	

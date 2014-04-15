@@ -16,7 +16,7 @@ public class Wave extends ExistingPlayer implements Serializable {
 	 * @param player The waving player
 	 * @param otherPlayer The waved to player
 	 */
-	public Wave(String server, String player, String otherServer, String otherPlayer) {
+	public Wave(String server, String player, String otherPlayer) {
 		super(server, player);
 		this.otherPlayer = otherPlayer;
 		everyone = false;

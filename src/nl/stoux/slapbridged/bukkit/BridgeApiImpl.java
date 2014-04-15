@@ -140,12 +140,11 @@ public class BridgeApiImpl implements BridgeAPI {
 	@Override
 	public void playerWavesToPlayer(String fromPlayer, String toPlayer) {
 		if (!bridge.isConnected()) return; //Check if connected
-		
-		//Create & Send container
+				
 		//Create & Send Container
 		bridge.getOutgoing().send(new SendableContainer(
 			ObjectType.PLAYER_WAVE,
-			new Wave(bridge.getThisServer().getName(), fromPlayer),
+			new Wave(bridge.getThisServer().getName(), fromPlayer, toPlayer),
 			IdentifierGenerator.nextID()
 		));
 	}

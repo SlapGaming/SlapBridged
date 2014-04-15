@@ -146,7 +146,7 @@ public class PlayerListener implements Listener {
 					//=> Compare them
 					if (player.substring(0, beginLength).equalsIgnoreCase(nameBeginsWith)) { //If start of name matches beginWith string
 						//=> Add to collection
-						players.add(nameBeginsWith);
+						collection.add(player);
 					}
 				}
 			}

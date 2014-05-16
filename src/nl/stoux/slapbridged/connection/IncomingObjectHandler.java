@@ -136,7 +136,7 @@ public class IncomingObjectHandler extends BukkitRunnable {
 			if ((otherServer = getServer(serverBroadcast.getServer())) == null) return; //Get the server => If null return
 			
 			//Create message
-			String message = serverBroadcast.getColorCodedMessage();
+			String message = serverBroadcast.getMessage();
 			//Conditions
 			if (serverBroadcast.isPrependSlap()) {
 				message = ChatColor.GOLD + "[SLAP] " + ChatColor.WHITE + message;
@@ -146,7 +146,7 @@ public class IncomingObjectHandler extends BukkitRunnable {
 			}
 			
 			//=> Bukkit broadcast
-			BukkitUtil.broadcast(message, false);
+			BukkitUtil.broadcast(ChatColor.translateAlternateColorCodes('&', message), false);
 			break;
 			
 		//player events

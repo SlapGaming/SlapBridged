@@ -27,6 +27,7 @@ import nl.stoux.slapbridged.objects.OtherPlayer;
 import nl.stoux.slapbridged.objects.OtherServer;
 import nl.stoux.slapbridged.objects.SendableContainer;
 import nl.stoux.slapbridged.objects.sendables.AfkReason;
+import nl.stoux.slapbridged.objects.sendables.Broadcast;
 import nl.stoux.slapbridged.objects.sendables.Chat;
 import nl.stoux.slapbridged.objects.sendables.ChatChannelMessage;
 import nl.stoux.slapbridged.objects.sendables.ExistingPlayer;
@@ -131,13 +132,21 @@ public class IncomingObjectHandler extends BukkitRunnable {
 			break;
 			
 		case GRID_BROADCAST: //=> A grid wide broadcast
-			String serverBroadcast = (String) container.getObject(); //Get broadcast
+			Broadcast serverBroadcast = (Broadcast) container.getObject(); //Get broadcast
+			if ((otherServer = getServer(serverBroadcast.getServer())) == null) return; //Get the server => If null return
+			
+			//Create message
+			String message = serverBroadcast.getColorCodedMessage();
+			//Conditions
+			if (serverBroadcast.isPrependSlap()) {
+				message = ChatColor.GOLD + "[SLAP] " + ChatColor.WHITE + message;
+			}
+			if (serverBroadcast.isShowSendingServer()) {
+				message = otherServer.getChatPrefix() + ChatColor.WHITE + " " + message;
+			}
 			
 			//=> Bukkit broadcast
-			BukkitUtil.broadcast(
-				"[" + ChatColor.RED + "Server-Broadcast" + ChatColor.WHITE + "] " + ChatColor.GREEN + ChatColor.translateAlternateColorCodes('&', serverBroadcast),
-				false
-			);
+			BukkitUtil.broadcast(message, false);
 			break;
 			
 		//player events

@@ -12,6 +12,7 @@ import nl.stoux.slapbridged.objects.OtherPlayer;
 import nl.stoux.slapbridged.objects.OtherServer;
 import nl.stoux.slapbridged.objects.SendableContainer;
 import nl.stoux.slapbridged.objects.sendables.AfkReason;
+import nl.stoux.slapbridged.objects.sendables.Broadcast;
 import nl.stoux.slapbridged.objects.sendables.Chat;
 import nl.stoux.slapbridged.objects.sendables.ChatChannelMessage;
 import nl.stoux.slapbridged.objects.sendables.KnownPlayerRequest;
@@ -23,6 +24,21 @@ public class BridgeApiImpl implements BridgeAPI {
 	
 	public BridgeApiImpl(Bridge bridge) {
 		this.bridge = bridge;
+	}
+	
+	@Override
+	public void broadcastMessage(String message, boolean prependSendingServer, boolean prependSlap) {
+		if (!bridge.isConnected()) return; //Ignore if not connected
+		
+		//Create sendable
+		SendableContainer container = new SendableContainer(
+			ObjectType.GRID_BROADCAST,
+			new Broadcast(bridge.getThisServer().getName(), message, prependSendingServer, prependSlap),
+			IdentifierGenerator.nextID()
+		);
+		
+		//Send the container
+		bridge.getOutgoing().send(container);
 	}
 
 	@Override

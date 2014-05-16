@@ -9,6 +9,14 @@ import nl.stoux.slapbridged.objects.OtherServer;
 public interface BridgeAPI {
 
 	/**
+	 * Broadcast a message to all the other servers
+	 * @param message The message
+	 * @param prependSendingServer The other server should prepend [Sending Server name]
+	 * @param prependSlap The other servers should prepend [SLAP] (after sending server)
+	 */
+	public void broadcastMessage(String message, boolean prependSendingServer, boolean prependSlap);
+	
+	/**
 	 * Send a new ChatChannel message to the grid
 	 * @param channel The channel it was send in
 	 * @param player The player who send the message

@@ -34,7 +34,7 @@ public class PlayerListener implements Listener {
 		this.colorPermission = colorPermission;
 	}
 	
-	@EventHandler(priority = EventPriority.MONITOR)
+	@EventHandler
 	public void onJoin(PlayerJoinEvent event) {
 		Bridge bridge = slapBridge.getBridge();
 				
@@ -62,7 +62,7 @@ public class PlayerListener implements Listener {
 		bridge.getOutgoing().send(container);
 	}
 	
-	@EventHandler(priority = EventPriority.MONITOR)
+	@EventHandler
 	public void onQuit(PlayerQuitEvent event) {
 		Bridge bridge = slapBridge.getBridge();
 		

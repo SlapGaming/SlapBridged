@@ -1,6 +1,7 @@
 package nl.stoux.slapbridged.bukkit.listeners;
 
 import java.util.Collection;
+import java.util.Map;
 
 import nl.stoux.slapbridged.IdentifierGenerator;
 import nl.stoux.slapbridged.bukkit.SlapBridged;
@@ -65,10 +66,15 @@ public class PlayerListener implements Listener {
 	@EventHandler
 	public void onQuit(PlayerQuitEvent event) {
 		Bridge bridge = slapBridge.getBridge();
+		String leavingPlayer = event.getPlayer().getName();
 		
 		//Get player
-		OtherPlayer player = bridge.getThisServer().getPlayers().get(event.getPlayer().getName());
+		Map<String, OtherPlayer> players = bridge.getThisServer().getPlayers();
+		OtherPlayer player = players.get(leavingPlayer);
 		player.setOnline(false); //Set offline
+		
+		//Remove player
+		bridge.getThisServer().playerQuits(leavingPlayer);
 		
 		//If not connected => Ignore
 		if (!bridge.isConnected()) return;

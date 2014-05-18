@@ -13,6 +13,7 @@ import nl.stoux.slapbridged.bukkit.events.BridgedPlayerChatEvent;
 import nl.stoux.slapbridged.bukkit.events.BridgedPlayerJoinEvent;
 import nl.stoux.slapbridged.bukkit.events.BridgedPlayerMeEvent;
 import nl.stoux.slapbridged.bukkit.events.BridgedPlayerMentionEvent;
+import nl.stoux.slapbridged.bukkit.events.BridgedPlayerMessageEvent;
 import nl.stoux.slapbridged.bukkit.events.BridgedPlayerQuitEvent;
 import nl.stoux.slapbridged.bukkit.events.BridgedPlayerWaveEvent;
 import nl.stoux.slapbridged.bukkit.events.BridgedServerConnectsEvent;
@@ -32,6 +33,7 @@ import nl.stoux.slapbridged.objects.sendables.Chat;
 import nl.stoux.slapbridged.objects.sendables.ChatChannelMessage;
 import nl.stoux.slapbridged.objects.sendables.ExistingPlayer;
 import nl.stoux.slapbridged.objects.sendables.KnownPlayerRequest;
+import nl.stoux.slapbridged.objects.sendables.Message;
 import nl.stoux.slapbridged.objects.sendables.Modreq;
 import nl.stoux.slapbridged.objects.sendables.NewPlayer;
 import nl.stoux.slapbridged.objects.sendables.Wave;
@@ -265,6 +267,19 @@ public class IncomingObjectHandler extends BukkitRunnable {
 			
 			//=> Bukkit events
 			event = new BridgedPlayerMentionEvent(otherServer, time, otherPlayer, mention.getChatMessage());
+			//	=> Call in A-Sync
+			BukkitUtil.callEvent(event);
+			break;
+			
+		//A player /msg'd another player
+		case PLAYER_MESSAGE:
+			Message chatMessage = (Message) container.getObject();
+			
+			//Get source server
+			if ((otherServer = getServer(chatMessage.getFromServer())) == null) return; //Get the server => If null return
+			
+			//=> Bukkit events
+			event = new BridgedPlayerMessageEvent(otherServer, time, chatMessage.getFromPlayer(), chatMessage.getToPlayer(), chatMessage.getMessage(), chatMessage.isColorMessage());
 			//	=> Call in A-Sync
 			BukkitUtil.callEvent(event);
 			break;

@@ -9,6 +9,15 @@ import nl.stoux.slapbridged.objects.OtherServer;
 public interface BridgeAPI {
 
 	/**
+	 * A player sends a message to another player
+	 * @param fromPlayer The sending player
+	 * @param toPlayer The receiving player
+	 * @param message The send message
+	 * @param colorMessaged The message should be colored
+	 */
+	public void playerSendsMsg(String fromPlayer, String toPlayer, String message, boolean colorMessaged);
+	
+	/**
 	 * Broadcast a message to all the other servers
 	 * @param message The message
 	 * @param prependSendingServer The other server should prepend [Sending Server name]

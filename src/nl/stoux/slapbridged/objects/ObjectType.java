@@ -22,6 +22,7 @@ public enum ObjectType {
 	PLAYER_WAVE,
 	PLAYER_ME,
 	PLAYER_MENTION,
+	PLAYER_MESSAGE,
 	
 	//Third party
 	NEW_MODREQ, CLAIM_MODREQ, DONE_MODREQ,
